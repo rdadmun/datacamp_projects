@@ -12,18 +12,22 @@ def merge_all_data(file1, file2, file3, file4):
     user_health_df = user_health_df.dropna(subset=['user_id', 'date'])
     if user_health_df['sleep_hours'].dtype == 'O':
         user_health_df['sleep_hours'] = user_health_df['sleep_hours'].str.strip('hH').astype(float)
+    
     # Supplement Usage Clean
     supplement_usage_df = supplement_usage_df.dropna(subset=['user_id', 'date'])
+    
     # Convert supplement dosage to grams
     supplement_usage_df['dosage_grams'] = supplement_usage_df.apply(
     	lambda row: row['dosage'] / 1000 if row['dosage_unit'] == 'mg' else row['dosage'], axis=1
     )
+    
     # Experiments Clean
     experiments_df.rename(columns={'name': 'experiment_name'}, inplace=True)
     # User Profiles Clean
     user_profile_df = user_profile_df.dropna(subset=['user_id', 'email'])
     
     # Map age to age groups
+    
     def categorize_age(age):
         if pd.isna(age):
             return 'Unknown'
@@ -41,8 +45,9 @@ def merge_all_data(file1, file2, file3, file4):
             return '56-65'
         else:
             return 'Over 65'
-
+            
     user_profile_df['user_age_group'] = user_profile_df['age'].apply(categorize_age)
+   
     
     #print(user_health_df.columns)
     #print(user_profile_df.columns)
@@ -79,8 +84,11 @@ def merge_all_data(file1, file2, file3, file4):
 
     return final_df
 
+    print(final_df.dtypes)
 
 merge_all_data('/Users/ryan/workspace/github.com/rdadmun/Datacamp/data_engineer_projects/user_health_data.csv', 
                '/Users/ryan/workspace/github.com/rdadmun/Datacamp/data_engineer_projects/supplement_usage.csv', 
                '/Users/ryan/workspace/github.com/rdadmun/Datacamp/data_engineer_projects/experiments.csv', 
                '/Users/ryan/workspace/github.com/rdadmun/Datacamp/data_engineer_projects/user_profiles.csv')
+               
+               
